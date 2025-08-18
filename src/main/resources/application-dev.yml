@@ -1,9 +1,18 @@
 server:
+  address: 0.0.0.0
   port: 8081
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
 spring:
   datasource:
-    url: jdbc:postgresql://34.67.252.226:5432/assignmnent
+    url: jdbc:postgresql://34.67.252.226:5432/assignment
     username: postgres
     password: "@Goodgame8"
     driver-class-name: org.postgresql.Driver
