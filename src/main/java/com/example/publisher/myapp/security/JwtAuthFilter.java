@@ -28,8 +28,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // Skip JWT auth for actuator endpoints so Prometheus/Grafana can access metrics
-        if (path.startsWith("/actuator")) {
+        // Skip JWT auth for public endpoints
+        if (path.startsWith("/actuator") ||
+                path.equals("/api/auth/login") ||
+                path.equals("/api/auth/register")) {
             filterChain.doFilter(request, response);
             return;
         }
