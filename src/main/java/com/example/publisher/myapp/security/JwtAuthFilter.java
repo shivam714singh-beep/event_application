@@ -22,16 +22,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-
-        // Skip JWT auth for actuator endpoints so Prometheus/Grafana can access metrics
-        if (path.startsWith("/actuator")) {
+        if (path.equals("/v1/api/auth/login") || path.equals("/v1/api/auth/register") || path.startsWith("/actuator")) {
             filterChain.doFilter(request, response);
-            return;
+            return; // Skip JWT check for these endpoints
         }
 
         String authHeader = request.getHeader("Authorization");
@@ -40,7 +37,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
             if (jwtUtils.isValid(token)) {
                 String username = jwtUtils.getUsernameFromToken(token);
-
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     var userDetails = userDetailsService.loadUserByUsername(username);
                     var auth = new UsernamePasswordAuthenticationToken(

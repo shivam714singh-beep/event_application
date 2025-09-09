@@ -4,7 +4,7 @@ spring:
 
 logging:
   level:
-    root: WARN
+    root: INFO
     org.springframework: WARN
     org.apache.kafka: WARN
     org.hibernate: WARN
@@ -12,10 +12,12 @@ logging:
     com.example.publisher.myapp: INFO
 
 management:
+  server:
+    port: 9081  # Separate port for actuator
   endpoints:
     web:
       exposure:
-        include: prometheus
+        include: "*"
   endpoint:
     prometheus:
       enabled: true
